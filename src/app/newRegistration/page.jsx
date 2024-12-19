@@ -16,8 +16,12 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import IconButton from "@mui/material/IconButton";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
+// import EditIcon from "@mui/icons-material/Edit";
+import { MdDelete } from "react-icons/md";
+
+// import DeleteIcon from "@mui/icons-material/Delete";
+import { MdEdit } from "react-icons/md";
+
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 
 export default function RegistrationModal() {
@@ -256,10 +260,10 @@ export default function RegistrationModal() {
                                 <TableCell>{registration.PinCode}</TableCell>
                                 <TableCell>
                                     <IconButton onClick={() => handleEdit(index)} color="primary">
-                                        <EditIcon />
+                                        <MdEdit /> 
                                     </IconButton>
                                     <IconButton onClick={() => handleDelete(index)} color="secondary">
-                                        <DeleteIcon />
+                                        <MdDelete />
                                     </IconButton>
                                 </TableCell>
                             </TableRow>
