@@ -8,9 +8,9 @@ import '@/app/globals.css'
 import '@assets/iconify-icons/generated-icons.css'
 
 export const metadata = {
-  title: 'VPower-International',
+  title: 'People-Like',
   description:
-'VPower-International'
+'People-Like'
   }
 
 const RootLayout = ({ children }) => {
