@@ -17,6 +17,7 @@ import StyledVerticalNavExpandIcon from '@menu/styles/vertical/StyledVerticalNav
 // Style Imports
 import menuItemStyles from '@core/styles/vertical/menuItemStyles'
 import menuSectionStyles from '@core/styles/vertical/menuSectionStyles'
+import { useEffect, useState } from 'react'
 
 const RenderExpandIcon = ({ open, transitionDuration }) => (
   <StyledVerticalNavExpandIcon open={open} transitionDuration={transitionDuration}>
@@ -29,6 +30,13 @@ const VerticalMenu = ({ scrollMenu }) => {
   const theme = useTheme()
   const { isBreakpointReached, transitionDuration } = useVerticalNav()
   const ScrollWrapper = isBreakpointReached ? 'div' : PerfectScrollbar
+const [Userinfo, setUserinfo] = useState({})
+useEffect(() => {
+  
+const userinfos = JSON.parse(localStorage.getItem("Userinfo"))
+ console.log(userinfos)
+ setUserinfo(userinfos)
+}, [])
 
   return (
     // eslint-disable-next-line lines-around-comment
@@ -52,20 +60,30 @@ const VerticalMenu = ({ scrollMenu }) => {
         renderExpandedMenuItemIcon={{ icon: <i className='ri-circle-line' /> }}
         menuSectionStyles={menuSectionStyles(theme)}
       >
-        <SubMenu
+        <SubMenu 
+         
           label='Dashboards'
           icon={<i className='ri-home-smile-line' />}
-          suffix={<Chip label='5' size='small' color='error' />}
+          suffix={<Chip label='5' size='small' color='error' />} 
         >
-          <MenuItem
+          {/* <MenuItem
             href={`${process.env.NEXT_PUBLIC_PRO_URL}/dashboards/crm`}
             suffix={<Chip label='Pro' size='small' color='primary' variant='tonal' />}
             //target='_blank'
           >
             CRM
-          </MenuItem>
-          <MenuItem href='/'>Analytics</MenuItem>
-          <MenuItem
+          </MenuItem> */}
+          {/* <MenuItem href='/'>New Registartion</MenuItem>
+          <MenuItem href='/'>Customer Level</MenuItem>
+          <MenuItem href='/'>Coins Detail</MenuItem>
+          <MenuItem href='/'>Withdraw Status</MenuItem>
+          <MenuItem href='/'>Grade Achievers</MenuItem>
+          <MenuItem href='/'>Logout</MenuItem> */}
+
+
+
+
+          {/* <MenuItem
             href={`${process.env.NEXT_PUBLIC_PRO_URL}/dashboards/ecommerce`}
             suffix={<Chip label='Pro' size='small' color='primary' variant='tonal' />}
             //target='_blank'
@@ -85,39 +103,58 @@ const VerticalMenu = ({ scrollMenu }) => {
             //target='_blank'
           >
             Logistics
-          </MenuItem>
+          </MenuItem> */}
         </SubMenu>
+        {Userinfo.UserType === 'User'  ?  (
+          <>
+     
+         <MenuItem href='/CustomerLevel'>Customer Level</MenuItem> 
+        <MenuItem href='/Coindetails'>Coins Detail</MenuItem>
+        {/* <MenuItem href='/Home'>Tree Structure</MenuItem> */}
+  
+        <MenuItem href='/'>Logout</MenuItem>
+        </> 
+        ):
+        <> 
+        <MenuItem href='/newRegistration'>New Registration</MenuItem>
+        <MenuItem href='/CustomerLevel'>Customer Level</MenuItem>
+        <MenuItem href='/Coindetails'>Coins Detail</MenuItem>
+
+        {/* <MenuItem href='/Coindetails'>Coins Detail</MenuItem>
+        <MenuItem href='/Home'>Withdraw Status</MenuItem>
+        <MenuItem href='/UnderMaintenance'>Grade Achievers</MenuItem> */}
+
+        <MenuItem href='/'>Logout</MenuItem> 
+        </>
+        }
+
+{/* 
         <SubMenu
           label='Front Pages'
           icon={<i className='ri-file-copy-line' />}
           suffix={<Chip label='Pro' size='small' color='primary' variant='tonal' />}
         >
           <MenuItem href={`${process.env.NEXT_PUBLIC_PRO_URL}/front-pages/landing-page`} 
-         // target='_blank'
           >
             Landing
           </MenuItem>
           <MenuItem href={`${process.env.NEXT_PUBLIC_PRO_URL}/front-pages/pricing`} 
-          //target='_blank'
           >
             Pricing
           </MenuItem>
           <MenuItem href={`${process.env.NEXT_PUBLIC_PRO_URL}/front-pages/payment`} 
-          //target='_blank'
           >
             Payment
           </MenuItem>
           <MenuItem href={`${process.env.NEXT_PUBLIC_PRO_URL}/front-pages/checkout`} 
-          //target='_blank'
           >
             Checkout
           </MenuItem>
           <MenuItem href={`${process.env.NEXT_PUBLIC_PRO_URL}/front-pages/help-center`} 
-          //target='_blank'
           >
             Help Center
           </MenuItem>
-        </SubMenu>
+        </SubMenu> */}
         {/* <MenuSection label='Apps & Pages'>
           <MenuItem
             href={`${process.env.NEXT_PUBLIC_PRO_URL}/apps/email`}

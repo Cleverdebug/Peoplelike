@@ -1,7 +1,7 @@
 'use client'
 
 // React Imports
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 // Next Imports
 import Link from 'next/link'
@@ -17,24 +17,22 @@ import InputAdornment from '@mui/material/InputAdornment'
 import Checkbox from '@mui/material/Checkbox'
 import Button from '@mui/material/Button'
 import FormControlLabel from '@mui/material/FormControlLabel'
-import Divider from '@mui/material/Divider'
-
-// Component Imports
-import Logo from '@components/layout/shared/Logo'
 import Illustrations from '@components/Illustrations'
 
-// Config Imports
+
 import themeConfig from '@configs/themeConfig'
 
-// Hook Imports
 import { useImageVariant } from '@core/hooks/useImageVariant'
 
 const Login = ({ mode }) => {
   // States
   const [isPasswordShown, setIsPasswordShown] = useState(false)
+  const [Registerno, setRegisterno] = useState("")
+  const [Password, setPassword] = useState("")
+  const [errors, setErrors] = useState({})
 
   // Vars
-  const darkImg = '/images/pages/auth-v1-mask-dark.png'
+  const darkImg = '/images/pages/auth-v1-mask-dark'
   const lightImg = '/images/pages/auth-v1-mask-light.png'
 
   // Hooks
@@ -42,30 +40,78 @@ const Login = ({ mode }) => {
   const authBackground = useImageVariant(mode, lightImg, darkImg)
   const handleClickShowPassword = () => setIsPasswordShown(show => !show)
 
-  const handleSubmit = e => {
-    e.preventDefault()
-    router.push('/')
-  }
+  const validate = () => {
+    let tempErrors = {}
 
+    if (!Registerno) tempErrors.Registerno = "Register No is required"
+    if (!Password) tempErrors.Password = "Password is required"
+
+    setErrors(tempErrors)
+    return Object.keys(tempErrors).length === 0
+  }
+  
+  useEffect(() => {
+  localStorage.removeItem('Userinfo')
+  }, [])
+  
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    if (!validate()) return
+
+    const response = await fetch("/api/Login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        registrationNumber: Registerno,
+        password: Password
+      }),
+    })
+
+    if (response.ok) {
+      const data = await response.json()
+      localStorage.setItem('Userinfo', JSON.stringify(data.user))
+
+      router.push('/dashboard')
+    } else {
+      alert("Invalid Register No or Password. Please try again.")
+    }
+  }
   return (
     <div className='flex flex-col justify-center items-center min-bs-[100dvh] relative p-6'>
       <Card className='flex flex-col sm:is-[450px]'>
         <CardContent className='p-6 sm:!p-12'>
-          <Link href={{pathname: '/' }}className='flex justify-center items-center mbe-6'>
-            <Logo />
+          <Link href={{pathname: '/' }} className='flex justify-center items-center mbe-6'>
+          <div className="hero-img">
+          <img src='/images/logos/logoimage.jpg' style={{height:'120px',width:'200px',objectFit:'contain'}} alt="" />        </div>
+            {/* App logo */}
+            
+
           </Link>
           <div className='flex flex-col gap-5'>
             <div>
-              <Typography variant='h4'>{`Welcome to ${themeConfig.templateName}!👋🏻`}</Typography>
-              <Typography className='mbs-1'>Please sign-in to your account and start the adventure</Typography>
+              <Typography variant='h4'>{`Login`}</Typography>
             </div>
-            <form noValidate autoComplete='off' onSubmit={handleSubmit} className='flex flex-col gap-5'>
-              <TextField autoFocus fullWidth label='Email' />
+            <form autoComplete='off' onSubmit={handleSubmit} className='flex flex-col gap-5'>
+              <TextField
+                autoFocus
+                fullWidth
+                label='Register No'
+                value={Registerno}
+                onChange={e => setRegisterno(e.target.value)}
+                error={!!errors.Registerno}
+                helperText={errors.Registerno}
+              />
               <TextField
                 fullWidth
+                value={Password}
+                onChange={(e) => setPassword(e.target.value)}
                 label='Password'
                 id='outlined-adornment-password'
                 type={isPasswordShown ? 'text' : 'password'}
+                error={!!errors.Password}
+                helperText={errors.Password}
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position='end'>
@@ -82,35 +128,14 @@ const Login = ({ mode }) => {
                 }}
               />
               <div className='flex justify-between items-center gap-x-3 gap-y-1 flex-wrap'>
-                <FormControlLabel control={<Checkbox />} label='Remember me' />
+                {/* <FormControlLabel control={<Checkbox />} label='Remember me' />
                 <Typography className='text-end' color='primary' component={Link} href='/forgot-password'>
                   Forgot password?
-                </Typography>
+                </Typography> */}
               </div>
               <Button fullWidth variant='contained' type='submit'>
                 Log In
               </Button>
-              <div className='flex justify-center items-center flex-wrap gap-2'>
-                <Typography>New on our platform?</Typography>
-                <Typography component={Link} href='/register' color='primary'>
-                  Create an account
-                </Typography>
-              </div>
-              <Divider className='gap-3'>or</Divider>
-              <div className='flex justify-center items-center gap-2'>
-                <IconButton size='small' className='text-facebook'>
-                  <i className='ri-facebook-fill' />
-                </IconButton>
-                <IconButton size='small' className='text-twitter'>
-                  <i className='ri-twitter-fill' />
-                </IconButton>
-                <IconButton size='small' className='text-github'>
-                  <i className='ri-github-fill' />
-                </IconButton>
-                <IconButton size='small' className='text-googlePlus'>
-                  <i className='ri-google-fill' />
-                </IconButton>
-              </div>
             </form>
           </div>
         </CardContent>
